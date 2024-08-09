@@ -1,6 +1,9 @@
 
 # dotfiles-EOS
 
+![](screenshot/2.png)
+![](screenshot/1.png)
+
  ## 中文
 
   本仓库收录的是本喵日常使用的炒鸡好用的Linux工具集合，主要存放我的一些配置文件用来备份。
