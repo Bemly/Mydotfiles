@@ -122,6 +122,8 @@
 
   jetbrains-ide - 全家桶，开箱即用，jvm 跨平台
 
+  zed - 新鲜的IDE，目前刚开放Linux版本，支持MACOS和类Unix，直接爽玩
+
   ### 聊天
 
   matrix linuxqq
