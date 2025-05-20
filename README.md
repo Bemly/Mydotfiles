@@ -56,7 +56,8 @@ Path: `Macos/`
 
 Equipment reference: `APPLE Mini M4 256GB+16GB (Micro PC)`
 
-Screenshot: 
+Screenshot: \
+![Screenshot-MAC](Macos/screenshot/home.png)
 
 
 Hackintosh config
