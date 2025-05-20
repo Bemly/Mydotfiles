@@ -20,7 +20,7 @@ Path: `EndeavourOS/`
 Equipment reference: `HUAWEI Honor Hunter V700 I5 Nvidia® GeForce RTX™ 2060 FRR-WFG9 (Laptop)`
 
 Screenshot: \
-[Screenshot-EOS](EndeavourOS/screenshot/1.png)
+![Screenshot-EOS](EndeavourOS/screenshot/1.png)
 
 
 SurpentOS config

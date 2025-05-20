@@ -59,7 +59,8 @@
 
   fonts = {
     packages = with pkgs; [
-      nerd-fonts.jetbrains-mono sketchybar-app-font minecraftia monocraft
+      nerd-fonts.jetbrains-mono nerd-fonts.hack 
+      sketchybar-app-font minecraftia monocraft 
     ];
   };
 
@@ -81,8 +82,8 @@
     gh gh-i gh-f gh-gei gh-eco gh-dash gh-classroom gh-markdown-preview 
     gitui lazygit tig jj git-chglog pre-commit gitea dvc
     # cloud
-    # cloudflared oci-cli rclone rclone-ui cloudlist aliyun-cli ibmcloud-cli scaleway-cli vultr-cli opentofu
-    # azure-cli awscli2 flarectl wrangler fastly heroku drive linode-cli yandex-cloud usacloud pyinfra ansible terraform
+    cloudflared oci-cli rclone cloudlist aliyun-cli ibmcloud-cli scaleway-cli vultr-cli opentofu terraform
+    azure-cli awscli2 flarectl fastly heroku drive linode-cli yandex-cloud usacloud pyinfra ansible 
     # disk
     duf dust ncdu godu gdu duff dua smartmontools carapace carapace-bridge  
     zoxide diffoscope trash-cli chezmoi pdisk smartmontools create-dmg dmg2img
@@ -96,11 +97,10 @@
     vcpkg conan zig minizign arocc rustup rustc libuv                                                   # zig/C/rust
     luajit luajitPackages.luarocks python3Full python-qt just ruff yapf pipx pylint uv rye              # lua/py
     nodenv deno bun typescript pm2 rhino wasmtime wasmer wasmedge wasm-tools zola hugo caddy            # js/wasm
-    kotlin go php scala ocaml perl rakudo zef                                                           # java/go/php/fp
-    # avalonia dotnet-sdk # microsft
-    apple-sdk_15 darwin.xcode_16_3 swift jazzy catch2 darwin.top                                        # apple
-    mystmd mdtsql glow #decktape comrak xlsxsql # markdown
-    # flink gradle activemq ant ballerinjaa coursier groovy hadoop ki grails maven  # SDKMAN
+    go php scala ocaml perl rakudo zef                                                                  # go/php/fp
+    apple-sdk_15 swift jazzy catch2 darwin.top dotnet-sdk                                               # apple/ms
+    mystmd mdtsql glow comrak xlsxsql                                                                   # markdown
+    flink gradle activemq ant groovy hadoop maven kotlin                                                # SDKMAN/java
     podman podman-tui podman-compose docker docker-compose lazydocker dry syft lima dive qemu utm       # container
     minikube kubectx kube-score kind kube-capacity k3d k9s kube-linter                                  # k8s
     lsd thefuck wtfutil bat qrencode grex joker mawk                                                    # cmd enhance
@@ -116,7 +116,7 @@
     oha hey vegeta ffuf hyperfine                                                                       # analysis
     jq yq gojq jqp jless fx jc dasel gron dyff ytt                                                      # json/yaml
     mihomo clash-rs metacubexd zashboard                                                                # proxy
-    gimp exiftool                                                                                       # image editor
+    gimp exiftool flameshot                                                                             # image
     vlc-bin mpv ffmpeg-full                                                                             # movies
     mosh assh passh sshpass xxh ssh-audit sesh ttyd gotty moonlight-qt frp scrcpy                       # ssh/vnc
     fish screen zellij gum starship murex nushell xonsh elvish shfmt powerline-go powershell zx sqsh    # shell
@@ -124,6 +124,7 @@
     yabai skhd sketchybar autojump ranger switchaudio-osx cava blueutil                                 # WM
     firefox arc-browser floorp                                                                          # browser
     discord paper-plane materialgram ayugram-desktop _64gram tg nchat                                   # sms
+    osu-lazer-bin                                                                                       # games
   ];
 
   # HOMEBREW, i like this software ffi binding :)
@@ -135,7 +136,7 @@
       "visual-studio" # ide
       "qq" "wechat" # sms
       "bilibili" # video
-      "steam" "minecraft" # games
+      "steam" "minecraft" "itch" # games
       "zen" # browser
       "krita" # image editor
       "mihomo-party" # proxy
@@ -276,7 +277,7 @@
       git = {
         enable = true;
         lfs.enable = true;
-        userEmail = "bemly_@patelmail.com";
+        userEmail = "bemly_@petalmail.com";
         userName = "Bemly";
         signing = {
           key = "A173F8531FE6C066";
