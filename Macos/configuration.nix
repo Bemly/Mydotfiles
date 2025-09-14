@@ -2,6 +2,8 @@
 
 {
   system = {
+
+    primaryUser = "bemly";
     # Used for backwards compatibility, please read the changelog before changing.
     # $ darwin-rebuild changelog
     stateVersion = 6;
@@ -67,65 +69,87 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   nixpkgs.config.allowUnfree = true;
-  environment.systemPackages = with pkgs; [
-    # editor
-    micro obsidian navi helix sphinx ov direnv nix-direnv mkdocs khal pandoc
-    imhex hexyl upx bed delta epr jadx cfr buku tokei scc gcalcli pueue 
-    vim neovim vimPlugins.yazi-nvim vimPlugins.nnn-vim
-    vscode vscode-extensions.jnoortheen.nix-ide vscode-extensions.mkhl.direnv
-    # minecraft
-    hmcl packwiz ferium modrinth-app glfw3-minecraft gopacked 
-    optifine bluemap regolith prismlauncher minutor jmc2obj lazymc 
-    mchprs  mcstatus mcrcon mcdreforged gate fabric-installer
-    # git
-    git git-lfs tea glab goreleaser soft-serve act bit gitleaks
-    gh gh-i gh-f gh-gei gh-eco gh-dash gh-classroom gh-markdown-preview 
-    gitui lazygit tig jj git-chglog pre-commit gitea dvc
-    # cloud
-    cloudflared oci-cli rclone cloudlist aliyun-cli ibmcloud-cli scaleway-cli vultr-cli opentofu terraform
-    azure-cli awscli2 flarectl fastly heroku drive linode-cli yandex-cloud usacloud pyinfra ansible 
-    # disk
-    duf dust ncdu godu gdu duff dua smartmontools carapace carapace-bridge  
-    zoxide diffoscope trash-cli chezmoi pdisk smartmontools create-dmg dmg2img
-    # network
-    iproute2mac ifstat-legacy ipmitool iperf3 wireguard-tools atool rsync wget speedtest-cli ddgr 
-    gping nali trippy aria2 curlie gost mosquitto termshark xh termshark brook certbot httpx hurl 
-    socat websocat doggo magic-wormhole benthos ipatool chisel tproxy grpcurl miniserve httpie croc
-
-    nnn yazi fzf skim peco yaziPlugins.rsync yaziPlugins.git yaziPlugins.sudo                           # file manager
-    p7zip unrar zstd ouch                                                                               # zip
-    vcpkg conan zig minizign arocc rustup rustc libuv                                                   # zig/C/rust
-    luajit luajitPackages.luarocks python3Full python-qt just ruff yapf pipx pylint uv rye              # lua/py
-    nodenv deno bun typescript pm2 rhino wasmtime wasmer wasmedge wasm-tools zola hugo caddy            # js/wasm
-    go php scala ocaml perl rakudo zef                                                                  # go/php/fp
-    apple-sdk_15 swift jazzy catch2 darwin.top dotnet-sdk                                               # apple/ms
-    mystmd mdtsql glow comrak xlsxsql                                                                   # markdown
-    flink gradle activemq ant groovy hadoop maven kotlin                                                # SDKMAN/java
-    podman podman-tui podman-compose docker docker-compose lazydocker dry syft lima dive qemu utm       # container
-    minikube kubectx kube-score kind kube-capacity k3d k9s kube-linter                                  # k8s
-    lsd thefuck wtfutil bat qrencode grex joker mawk                                                    # cmd enhance
-    htop btop gotop procs zenith bottom-rs viddy sampler ctop mactop macchina watch macpm               # monitor
-    neofetch fastfetch pfetch-rs ipfetch cpufetch onefetch macchina                                     # fetch info
-    chatblade chatgpt llm litellm gptscript                                                             # ai
-    nmap trivy grype dnstwist tfsec scorecard gopass lynis skate cfssl horcrux easyrsa rustscan         # security
-    coreutils gnugrep gnused gawk mtr gnupg kopia pywal sd asciigraph hadolint                          # other
-    biliup-rs sl emojify emoji-picker invoice genact shtris etcd                                        # toys
-    qmqtt mqtt_cpp mqttui nanomq zigbee2mqtt                                                            # mqtt
-    litecli  sqlfluff lazysql usql sqlite sqlite-rsync mariadb postgresql influxdb2-cli mongodb-compass # sql
-    csview trdsql miller csvkit                                                                         # csv/tsv
-    oha hey vegeta ffuf hyperfine                                                                       # analysis
-    jq yq gojq jqp jless fx jc dasel gron dyff ytt                                                      # json/yaml
-    mihomo clash-rs metacubexd zashboard                                                                # proxy
-    gimp exiftool flameshot                                                                             # image
-    vlc-bin mpv ffmpeg-full                                                                             # movies
-    mosh assh passh sshpass xxh ssh-audit sesh ttyd gotty moonlight-qt frp scrcpy                       # ssh/vnc
-    fish screen zellij gum starship murex nushell xonsh elvish shfmt powerline-go powershell zx sqsh    # shell
-    kitty alacritty wezterm iterm2 warp-terminal tmux tmuxp                                             # terminal
-    yabai skhd sketchybar autojump ranger switchaudio-osx cava blueutil                                 # WM
-    firefox arc-browser floorp                                                                          # browser
-    discord paper-plane materialgram ayugram-desktop _64gram tg nchat                                   # sms
-    osu-lazer-bin                                                                                       # games
-  ];
+  environment.systemPackages = 
+    let
+      jetbrains = with pkgs.jetbrains; [
+        clion goland rider ruby-mine rust-rover webstorm phpstorm mps gateway dataspell datagrip aqua 
+        pycharm-professional idea-ultimate
+      ];
+      editors = with pkgs; [
+        micro obsidian navi helix sphinx ov direnv nix-direnv mkdocs khal pandoc
+        imhex hexyl upx bed delta epr jadx cfr buku tokei scc gcalcli pueue #zed-editor
+        vim neovim vimPlugins.yazi-nvim vimPlugins.nnn-vim jetbrains-toolbox
+        vscode vscode-extensions.jnoortheen.nix-ide vscode-extensions.mkhl.direnv
+      ];
+      # modrinth-app not build
+      minecraft = with pkgs; [
+        hmcl packwiz ferium glfw3-minecraft gopacked 
+        optifine bluemap regolith prismlauncher minutor jmc2obj lazymc 
+        mchprs  mcstatus mcrcon mcdreforged gate fabric-installer
+      ];
+      version_control = with pkgs; [
+        git git-lfs tea glab goreleaser soft-serve act bit gitleaks
+        gh gh-i gh-f gh-gei gh-eco gh-dash gh-classroom gh-markdown-preview 
+        gitui lazygit tig jj git-chglog pre-commit gitea dvc
+      ];
+      # pyinfra 4.2.7>= paramiko fastly not build by cargo
+      cloud_tools = with pkgs; [
+        cloudflared oci-cli rclone cloudlist aliyun-cli ibmcloud-cli scaleway-cli vultr-cli 
+        opentofu terraform usacloud ansible yandex-cloud 
+        azure-cli awscli2 flarectl heroku drive linode-cli 
+      ];
+      disk_tools = with pkgs; [
+        duf dust ncdu godu gdu duff dua smartmontools carapace carapace-bridge  
+        zoxide diffoscope trash-cli chezmoi pdisk smartmontools create-dmg dmg2img
+      ];
+      network_tools = with pkgs; [
+        iproute2mac ifstat-legacy ipmitool iperf3 wireguard-tools atool rsync wget speedtest-cli ddgr 
+        gping nali trippy aria2 curlie gost mosquitto termshark xh termshark brook certbot httpx hurl 
+        socat websocat doggo magic-wormhole benthos ipatool chisel tproxy grpcurl miniserve httpie croc
+      ];
+      ai_tools = with pkgs; [ chatblade chatgpt llm litellm gptscript ];
+      media_tools = with pkgs; [ gimp exiftool flameshot vlc-bin mpv ffmpeg-full ];
+      security_tools = with pkgs; [ nmap trivy grype dnstwist tfsec scorecard gopass lynis skate cfssl horcrux easyrsa rustscan ];
+      analysis_tools = with pkgs; [ oha hey vegeta ffuf hyperfine ];
+      proxy_tools = with pkgs; [ mihomo clash-rs metacubexd zashboard frp ];
+      other_tools = with pkgs; [ coreutils gnugrep gnused gawk mtr gnupg kopia pywal sd asciigraph hadolint ];
+      file_manager = with pkgs; [ nnn yazi fzf skim peco yaziPlugins.rsync yaziPlugins.git yaziPlugins.sudo ];
+      language_zig_c_rust = with pkgs; [ vcpkg conan zig minizign arocc rustup rustc libuv zls ];
+      #  python-qt qt-engine => CVE, python3Full is not existed maintainer(unstable)
+      language_lua_python = with pkgs; [ luajit luajitPackages.luarocks python312 just ruff yapf pipx pylint uv rye ];
+      language_js_wasm = with pkgs; [ nodenv deno bun typescript pm2 rhino wasmtime wasmer wasmedge wasm-tools zola hugo caddy ];
+      language_go_php_fp = with pkgs; [ go php scala ocaml perl rakudo zef ];
+      language_apple_ms = with pkgs; [ apple-sdk_15 swift jazzy catch2 darwin.top dotnet-sdk ];
+      language_java_sdkman = with pkgs; [ flink gradle activemq ant groovy hadoop maven kotlin ];
+      language_mqtt = with pkgs; [ qmqtt mqtt_cpp mqttui nanomq zigbee2mqtt ];
+      language_csv = with pkgs; [ csview trdsql miller csvkit ];
+      language_sql = with pkgs; [ litecli  sqlfluff lazysql usql sqlite sqlite-rsync mariadb postgresql influxdb2-cli mongodb-compass ];
+      language_json_yaml = with pkgs; [ jq yq gojq jqp jless fx jc dasel gron dyff ytt ];
+      compression_tools = with pkgs; [ p7zip unrar zstd ouch ];
+      markdowns = with pkgs; [ mystmd mdtsql glow comrak xlsxsql ];
+      containers = with pkgs; [ podman podman-tui podman-compose docker docker-compose lazydocker dry syft lima dive qemu utm ];
+      k8s = with pkgs; [ minikube kubectx kube-score kind kube-capacity k3d k9s kube-linter ];
+      cmd_shell = with pkgs; [ fish screen zellij gum starship murex nushell xonsh elvish shfmt powerline-go powershell zx sqsh ];
+      cmd_terminal = with pkgs; [ kitty alacritty wezterm iterm2 warp-terminal tmux tmuxp ];
+	  # thefuck not support py13, use pay-respects instead
+      cmd_enhance = with pkgs; [ lsd pay-respects wtfutil bat qrencode grex joker mawk ];
+      ssh_vnc = with pkgs; [ mosh assh passh sshpass xxh ssh-audit sesh ttyd gotty moonlight-qt scrcpy ];
+      monitors = with pkgs; [ htop btop gotop procs zenith bottom-rs viddy sampler ctop mactop macchina watch macpm ];
+      fetch_info = with pkgs; [ neofetch fastfetch pfetch-rs ipfetch cpufetch onefetch macchina ];
+      window_manager = with pkgs; [ yabai skhd sketchybar autojump ranger switchaudio-osx cava blueutil ];
+	  # arc-browser only 25.05, left out maintainer(unstable)
+      browsers = with pkgs; [ firefox ];
+      # _64gram not support darwin now
+      sms = with pkgs; [ discord paper-plane materialgram ayugram-desktop tg nchat ];
+      games = with pkgs; [ osu-lazer-bin ];
+      toys = with pkgs; [ biliup-rs sl emojify emoji-picker invoice genact shtris etcd ];
+    in
+      jetbrains ++ editors ++ minecraft ++ version_control ++ cloud_tools ++ disk_tools ++ network_tools
+        ++ ai_tools ++ media_tools ++ security_tools ++ analysis_tools ++ proxy_tools ++ other_tools ++ file_manager
+        ++ language_zig_c_rust ++ language_lua_python ++ language_js_wasm ++ language_go_php_fp 
+        ++ language_apple_ms ++ language_java_sdkman ++ language_mqtt ++ language_csv ++ language_sql ++ language_json_yaml 
+        ++ compression_tools ++ markdowns ++ containers ++ k8s ++ cmd_shell ++ cmd_terminal ++ cmd_enhance 
+        ++ ssh_vnc ++ monitors ++ browsers ++ sms ++ games ++ toys ++ window_manager ++ fetch_info;
 
   # HOMEBREW, i like this software ffi binding :)
   homebrew = {
@@ -139,7 +163,7 @@
       "steam" "minecraft" "itch" # games
       "zen" # browser
       "krita" # image editor
-      "mihomo-party" # proxy
+      # "mihomo-party" # proxy # no opensource
       "sf-symbols" "background-music"  # sketchybar tools
     ];
     
@@ -196,38 +220,82 @@
     skhd = {
       enable = true;
       skhdConfig = ''
-        shift + cmd + alt - n : yabai -m window --swap prev
-        cmd + alt - n : yabai -m window --swap next
-        cmd + alt - 0x1E : yabai -m window --warp east
-        cmd + alt - 0x21 : yabai -m window --warp west
-        cmd + alt - b : yabai -m space --balance
-        alt - x : yabai -m space --focus recent
-        alt + cmd - left : yabai -m space --focus prev
-        alt + cmd - right : yabai -m space --focus next
-        alt + cmd - up : yabai -m window --focus prev
-        alt + cmd - down : yabai -m window --focus next
-        shift + alt - x : yabai -m window --display recent; yabai -m display --focus recent
-        alt + cmd - up : yabai -m window --display prev; yabai -m display --focus prev
-        alt + cmd - down : yabai -m window --display next; yabai -m display --focus next
-        alt + cmd - d : yabai -m window --toggle zoom-parent
-        alt + cmd - f : yabai -m window --toggle zoom-fullscreen; sketchybar --trigger window_focus
-        alt + cmd - x : yabai -m window --toggle split
-        alt + cmd - space : yabai -m window --toggle float --grid 4:4:1:1:2:2; sketchybar --trigger window_focus
-        alt + cmd - p : yabai -m window --toggle sticky --toggle pip
-        cmd - t : open /Applications/Nix\ Apps/Warp.app
-        cmd - q : yabai -m window --focus && yabai -m window --close
-        alt + cmd - n : yabai -m space --create; sketchybar --trigger window_focus
-        alt + cmd - d : yabai -m space --destroy; sketchybar --trigger window_focus
       '';
     };
 
     sketchybar = {
       enable = true;
       config = ''
+        SKETCHBAR_BIN="sketchybar"
+        BEMLY_HOME="/Users/bemly"
+        PLUGIN_DIR="$BEMLY_HOME/.config/sketchybar/plugins"
+        ITEM_DIR="$BEMLY_HOME/.config/sketchybar/items"
+
+        LABEL_FONT_FAMILY="苹方-简"
+        LABEL_FONT_STYLE="Medium"
+        LABEL_FONT_SIZE="14"
+        LABEL_COLOR=0xffdfe1ea                                     
+        ICON_FONT_FAMILY="Hack Nerd Font"
+        ICON_FONT_STYLE="Regular"
+        ICON_FONT_SIZE="16"
+        BAR_COLOR=0xee1a1c26
+        LABEL_COLOR=0xffdfe1ea                                     
+        BACKGROUND_COLOR=0xff252731
+        BACKGROUND_HEIGHT=33
+        BACKGROUND_CORNER_RADIUS=20
+        PADDINGS=3
+
+        $SKETCHBAR_BIN --bar height=50                                                     \
+                            corner_radius=14                                              \
+                            border_width=0                                                \
+                            margin=95                                                     \
+                            blur_radius=0                                                 \
+                            position=top                                                  \
+                            padding_left=4                                                \
+                            padding_right=4                                               \
+                            color=$BAR_COLOR                                              \
+                            topmost=off                                                   \
+                            sticky=on                                                     \
+                            font_smoothing=off                                            \
+                            y_offset=10                                                   \
+                            notch_width=0                                                 \
+                                                                                          \
+                  --default drawing=on                                                    \
+                            updates=when_shown                                            \
+                            label.font.family="$LABEL_FONT_FAMILY"                        \
+                            label.font.style=$LABEL_FONT_STYLE                            \
+                            label.font.size=$LABEL_FONT_SIZE                              \
+                            label.padding_left=$PADDINGS                                  \
+                            label.padding_right=$PADDINGS                                 \
+                            icon.font.family="$ICON_FONT_FAMILY"                          \
+                            icon.font.style=$ICON_FONT_STYLE                              \
+                            icon.font.size=$ICON_FONT_SIZE                                \
+                            icon.padding_left=$PADDINGS                                   \
+                            icon.padding_right=$PADDINGS                                  \
+                            background.padding_right=$PADDINGS                            \
+                            background.padding_left=$PADDINGS                             \
+
+        $SKETCHBAR_BIN --add event window_focus
+        $SKETCHBAR_BIN --add event title_change 
+
+        . "$ITEM_DIR/menu.sh"
+        . "$ITEM_DIR/system.sh"
+        . "$ITEM_DIR/window_title.sh"
+        
+        . "$ITEM_DIR/time.sh"
+        . "$ITEM_DIR/battery.sh"
+
+        . "$ITEM_DIR/bluetooth.sh"
+        . "$ITEM_DIR/vpn.sh"
+        . "$ITEM_DIR/wifi.sh"
+
+        $SKETCHBAR_BIN --update
+
         echo "sketchybar configuration loaded.."
+
       '';
       extraPackages = with pkgs; [
-        jq fzf thefuck autojump ranger lsd gh switchaudio-osx cava blueutil
+        jq fzf pay-respects autojump ranger lsd gh switchaudio-osx cava blueutil
       ];
     };
   };
@@ -255,7 +323,7 @@
       # purpur papermc minecraft-server
       purpur
     ];
-    home.stateVersion = "25.05";
+    home.stateVersion = "25.11";
 
     programs = {
       home-manager.enable = true;
@@ -331,7 +399,7 @@
       yabai -m rule --add app="^Alfred Preferences$" manage=off
       
       # 浮动app
-      yabai -m rule --add app="^(.*?bilibili.*?|.*?哔哩哔哩.*?)$" manage=off layer=above
+      # yabai -m rule --add app="^(.*?bilibili.*?|.*?哔哩哔哩.*?)$" manage=off layer=above
 
       # skbar 信号源
       yabai -m signal --add event=window_focused action="sketchybar --trigger window_focus"
@@ -424,8 +492,8 @@
 
       # swap managed window
       # shift + alt - h : yabai -m window --swap north
-      shift + cmd + alt - n : yabai -m window --swap prev
-      cmd + alt - n : yabai -m window --swap next
+      # shift + cmd + alt - n : yabai -m window --swap prev
+      # cmd + alt - n : yabai -m window --swap next
 
       # move managed window
       # shift + cmd - h : yabai -m window --warp east
@@ -447,23 +515,23 @@
       #                   index="$(yabai -m query --spaces --display | jq 'map(select(."is-native-fullscreen" == false))[-1].index')" && \
       #                   yabai -m window --space "\$\{index\}" && \
       #                   yabai -m space --focus "\$\{index\}"
-      cmd - n : yabai -m space --create; sketchybar --trigger window_focus
-      cmd - m : yabai -m space --destroy; sketchybar --trigger window_focus
+      cmd + alt - n : yabai -m space --create; sketchybar --trigger window_focus
+      cmd + alt - m : yabai -m space --destroy; sketchybar --trigger window_focus
       # nix-darwin not support `\$\{\}`, so use alt + cmd - left/right to focus new create space manually :(
 
       # fast focus desktop
       # cmd + alt - x : yabai -m space --focus recent
-      alt - x : yabai -m space --focus recent
-      alt - 1 : yabai -m space --focus 1
-      alt - 2 : yabai -m space --focus 2
-      alt - 3 : yabai -m space --focus 3
-      alt - 4 : yabai -m space --focus 4
-      alt - 5 : yabai -m space --focus 5
-      alt - 6 : yabai -m space --focus 6
-      alt - 7 : yabai -m space --focus 7
-      alt - 8 : yabai -m space --focus 8
-      alt - 9 : yabai -m space --focus 9
-      alt - 0 : yabai -m space --focus 0
+      cmd + alt - x : yabai -m space --focus recent
+      cmd + alt - 1 : yabai -m space --focus 1
+      cmd + alt - 2 : yabai -m space --focus 2
+      cmd + alt - 3 : yabai -m space --focus 3
+      cmd + alt - 4 : yabai -m space --focus 4
+      cmd + alt - 5 : yabai -m space --focus 5
+      cmd + alt - 6 : yabai -m space --focus 6
+      cmd + alt - 7 : yabai -m space --focus 7
+      cmd + alt - 8 : yabai -m space --focus 8
+      cmd + alt - 9 : yabai -m space --focus 9
+      cmd + alt - 0 : yabai -m space --focus 0
 
       alt + cmd - left : yabai -m space --focus prev
       alt + cmd - right : yabai -m space --focus next
