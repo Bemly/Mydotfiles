@@ -1,6 +1,22 @@
 { config, pkgs, ... }:
 
 {
+  nixpkgs.overlays = [
+    (final: prev: {
+      unity-test = prev.unity-test.overrideAttrs (oldAttrs: {
+        doCheck = false;
+        NIX_CFLAGS_COMPILE = (oldAttrs.NIX_CFLAGS_COMPILE or "") 
+          + " -Wno-error=implicit-void-ptr-cast -Wno-error=implicit-function-declaration";
+      });
+      python313 = prev.python313.override {
+        packageOverrides = pyFinal: pyPrev: {
+          agate = pyPrev.agate.overridePythonAttrs (oldAttrs: {
+            doCheck = false;
+          });
+        };
+      };
+    })
+  ];
   system = {
 
     primaryUser = "bemly";
@@ -69,11 +85,12 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   nixpkgs.config.allowUnfree = true;
+  
   environment.systemPackages = 
     let
       jetbrains = with pkgs.jetbrains; [
-        clion goland rider ruby-mine rust-rover webstorm phpstorm mps gateway dataspell datagrip aqua 
-        pycharm-professional idea-ultimate
+        clion goland rider ruby-mine rust-rover webstorm phpstorm mps gateway dataspell datagrip 
+        pycharm idea
       ];
       editors = with pkgs; [
         micro obsidian navi helix sphinx ov direnv nix-direnv mkdocs khal pandoc
@@ -97,18 +114,21 @@
         cloudflared oci-cli rclone cloudlist aliyun-cli ibmcloud-cli scaleway-cli vultr-cli 
         opentofu terraform usacloud ansible yandex-cloud 
         azure-cli awscli2 flarectl heroku drive linode-cli 
+        baidupcs-go
       ];
+      # diffoscope => fuse-3 not support darwin
       disk_tools = with pkgs; [
         duf dust ncdu godu gdu duff dua smartmontools carapace carapace-bridge  
-        zoxide diffoscope trash-cli chezmoi pdisk smartmontools create-dmg dmg2img
+        zoxide  trash-cli chezmoi pdisk smartmontools create-dmg dmg2img
       ];
       network_tools = with pkgs; [
         iproute2mac ifstat-legacy ipmitool iperf3 wireguard-tools atool rsync wget speedtest-cli ddgr 
         gping nali trippy aria2 curlie gost mosquitto termshark xh termshark brook certbot httpx hurl 
         socat websocat doggo magic-wormhole benthos ipatool chisel tproxy grpcurl miniserve httpie croc
       ];
-      ai_tools = with pkgs; [ chatblade chatgpt llm litellm gptscript ];
-      media_tools = with pkgs; [ gimp exiftool flameshot vlc-bin mpv ffmpeg-full ];
+      ai_tools = with pkgs; [ chatblade chatgpt llm litellm ];
+      # gimp3 not support darwin on 25.11
+      media_tools = with pkgs; [ gimp2 exiftool flameshot vlc-bin mpv ffmpeg-full ];
       security_tools = with pkgs; [ nmap trivy grype dnstwist tfsec scorecard gopass lynis skate cfssl horcrux easyrsa rustscan ];
       analysis_tools = with pkgs; [ oha hey vegeta ffuf hyperfine ];
       proxy_tools = with pkgs; [ mihomo clash-rs metacubexd zashboard frp ];
@@ -137,10 +157,10 @@
       monitors = with pkgs; [ htop btop gotop procs zenith bottom-rs viddy sampler ctop mactop macchina watch macpm ];
       fetch_info = with pkgs; [ neofetch fastfetch pfetch-rs ipfetch cpufetch onefetch macchina ];
       window_manager = with pkgs; [ yabai skhd sketchybar autojump ranger switchaudio-osx cava blueutil ];
-	  # arc-browser only 25.05, left out maintainer(unstable)
-      browsers = with pkgs; [ firefox ];
+	  # arc-browser only 25.05, left out maintainer(unstable) browsers litebrowser chawan ladybird
+      browsers = with pkgs; [ firefox  google-chrome ];
       # _64gram not support darwin now
-      sms = with pkgs; [ discord paper-plane materialgram ayugram-desktop tg nchat ];
+      sms = with pkgs; [ discord paper-plane materialgram ayugram-desktop tg ];
       games = with pkgs; [ osu-lazer-bin ];
       toys = with pkgs; [ biliup-rs sl emojify emoji-picker invoice genact shtris etcd ];
     in
@@ -163,6 +183,7 @@
       "steam" "minecraft" "itch" # games
       "zen" # browser
       "krita" # image editor
+      "baidunetdisk" # netdisk
       # "mihomo-party" # proxy # no opensource
       "sf-symbols" "background-music"  # sketchybar tools
     ];
@@ -345,8 +366,10 @@
       git = {
         enable = true;
         lfs.enable = true;
-        userEmail = "bemly_@petalmail.com";
-        userName = "Bemly";
+        settings.user = {
+        	email = "bemly_@petalmail.com";
+        	name = "Bemly";
+        };
         signing = {
           key = "A173F8531FE6C066";
           signByDefault = true;
